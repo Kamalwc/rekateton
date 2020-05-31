@@ -1,7 +1,7 @@
-//???HOW TO SERVE A HTML FILE IF ITS IN A SEPARATE DIRECTORY
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
+import { finished } from 'stream';
 const app = express();
 const port = 8000;
 const __dirname = path.resolve() // fixes __dirname issues
@@ -13,6 +13,7 @@ app.get('/notes',(req,res)=>{
     res.sendFile('notes.html',{root: path.join(__dirname,'./public')});
 })
 
+// get path 
 app.get('/api/notes', (req,res)=>{
     fs.readFile('../db/db.json',(err,data)=>{
         let x = JSON.parse(data);
@@ -20,19 +21,16 @@ app.get('/api/notes', (req,res)=>{
     });
 })
 
+//post path 
 app.post('/api/notes',(req,res)=>{
-    //!!ASK HOW TO SEPARATE INTO BACK ANF FRONT FODLERS
-    //HOW TO USE BREAKPOINT IN VSCODE
+  
     let newNote = req.body;
     const random = Math.floor(Math.random() * 900);
     newNote.id = random;
 
-    //use async await
-    // import the json 
+    // Practice using async await
     fs.readFile('../db/db.json', (err,data) =>{
         if(err) throw err;
-        // assign with unique id 
-        // check if note with random id exist if not assign a the number
         let storedNotes = JSON.parse(data); 
         storedNotes.push(newNote); 
       
@@ -44,6 +42,7 @@ app.post('/api/notes',(req,res)=>{
     res.json(newNote);
 })
 
+//delete path 
 app.delete('/api/notes/:id', (req,res)=>{
  let uniqueId = req.params.id;
  fs.readFile('../db/db.json', (err,data) =>{
@@ -54,8 +53,6 @@ app.delete('/api/notes/:id', (req,res)=>{
         return i.id === parseInt(uniqueId);
     })
    
-    console.log(index);
-    
     if(index != -1) storedNotes.splice(index,1);
   
     fs.writeFile('../db/db.json', JSON.stringify(storedNotes), err=>{
