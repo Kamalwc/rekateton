@@ -5,6 +5,9 @@ import { finished } from 'stream';
 const app = express();
 const port = 8000;
 const __dirname = path.resolve() // fixes __dirname issues
+app.use(express.static("public")); // solves front end prob bndles veytihin in and serves as static 
+
+// nodemon install globally ( like the C drive  npm -g nodemon )
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -66,7 +69,6 @@ app.delete('/api/notes/:id', (req,res)=>{
 
 app.get('*', (req,res) =>{ 
     res.sendFile('index.html',{root: path.join(__dirname,'./public')});
-
 })
 app.listen(port, ()=>{console.log('Listening on port: ' + port);
 })
