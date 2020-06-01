@@ -1,13 +1,13 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
-import { finished } from 'stream';
+
 const app = express();
 const port = 8000;
 const __dirname = path.resolve() // fixes __dirname issues
-app.use(express.static("public")); // solves front end prob bndles veytihin in and serves as static 
+app.use(express.static("public")); // solves front end prob bndles everything in and serves as static 
 
-// nodemon install globally ( like the C drive  npm -g nodemon )
+// nodemon installs globally ( like the C drive  npm -g nodemon)
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -24,14 +24,12 @@ app.get('/api/notes', (req,res)=>{
     });
 })
 
-//post path 
 app.post('/api/notes',(req,res)=>{
   
     let newNote = req.body;
     const random = Math.floor(Math.random() * 900);
     newNote.id = random;
 
-    // Practice using async await
     fs.readFile('../db/db.json', (err,data) =>{
         if(err) throw err;
         let storedNotes = JSON.parse(data); 
